@@ -29,9 +29,9 @@ elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
 [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
 
 if [[ "${release}" == "centos" ]]; then
-  yum -y update && yum -y install wget
+    yum -y install wget
 elif [[ "${release}" == "debian" || "${release}" == "ubuntu" ]]; then
-  apt-get -y update && apt-get -y install wget
+    apt-get -y install wget
 fi
 
 # 获取 /boot 目录所在分区（例如 /dev/sda1）
