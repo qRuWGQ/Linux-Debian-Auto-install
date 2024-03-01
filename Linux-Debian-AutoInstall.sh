@@ -41,7 +41,7 @@ boot_partition=$(df /boot | awk 'NR==2 {print $1}')
 boot_device=$(echo $boot_partition | sed 's/[0-9]*$//')
 
 # 获取所有磁盘
-disks=$(lsblk -d -o NAME -n)
+disks=$(lsblk -d -n -o NAME,TYPE | grep ' disk' | awk '{print $1}')
 
 # 获取 /boot 所在磁盘的所有分区
 partition=$(lsblk -o NAME -n $boot_device | sed 's/[^[:alnum:]]//g')
