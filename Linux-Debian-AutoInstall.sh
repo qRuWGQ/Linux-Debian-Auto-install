@@ -43,7 +43,7 @@ boot_device=$(echo $boot_partition | sed 's/[0-9]*$//')
 # 获取所有磁盘
 disks=$(lsblk -d -n -o NAME,TYPE | grep ' disk' | awk '{print $1}')
 
-# 获取 /boot 所在磁盘的所有分区
+# 获取 /boot 目录所在磁盘的所有分区
 partition=$(lsblk -o NAME -n $boot_device | sed 's/[^[:alnum:]]//g')
 
 # 初始化磁盘编号和启动分区的位置
@@ -68,7 +68,7 @@ done
 # 初始化计数器
 disk_counter=0
 
-# 遍历 /boot 所在磁盘的所有分区，判断 /boot 目录所在分区编号
+# 遍历 /boot 目录所在磁盘的所有分区，判断 /boot 目录所在分区编号
 for disk in $partition; do
     device="/dev/$disk"
     
@@ -101,9 +101,8 @@ else
     preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
 fi
 
-# 判断 /boot 目录是否挂在在根目录
+# 判断 /boot 目录所在分区的挂载目录
 boot_mout_dir=$(findmnt -n -o TARGET $boot_partition)
-
 if [ "$boot_mout_dir" = "/boot" ]; then
     boot_mout_dir="/"
 else
