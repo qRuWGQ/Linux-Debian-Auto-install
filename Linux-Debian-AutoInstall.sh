@@ -90,7 +90,12 @@ if [ "$partition_table_type" = "gpt" ]; then
     else
         partition="hd$boot_disk_number,gpt$boot_partition_number"
     fi
-    preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
+    
+    if [ -d "/sys/firmware/efi/efivars" ]; then
+        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
+    else
+        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
+    fi
 else
     # 对于MBR分区表的原有处理
     if [ $boot_partition_number -eq 0 ]; then
@@ -99,12 +104,7 @@ else
         partition="hd$boot_disk_number,msdos$boot_partition_number"
     fi
     
-    if [ -d "/sys/firmware/efi/efivars" ]; then
-        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
-    else
-        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
-    fi
-    
+    preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
 fi
 
 # 判断 /boot 目录所在分区的挂载目录
