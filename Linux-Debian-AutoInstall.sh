@@ -92,7 +92,7 @@ if [ "$partition_table_type" = "gpt" ]; then
     fi
     
     if [ -d "/sys/firmware/efi/efivars" ]; then
-        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
+        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-BIOS-GPT.cfg"
     else
         preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
     fi
