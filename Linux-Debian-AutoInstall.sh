@@ -98,7 +98,13 @@ else
     else
         partition="hd$boot_disk_number,msdos$boot_partition_number"
     fi
-    preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
+    
+    if [ -d "/sys/firmware/efi/efivars" ]; then
+        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
+    else
+        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
+    fi
+    
 fi
 
 # 判断 /boot 目录所在分区的挂载目录
