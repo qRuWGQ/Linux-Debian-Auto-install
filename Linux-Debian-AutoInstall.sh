@@ -91,10 +91,11 @@ if [ "$partition_table_type" = "gpt" ]; then
         partition="hd$boot_disk_number,gpt$boot_partition_number"
     fi
     
+    # 如果是GPT分区，但是却不是UEFI引导
     if [ -d "/sys/firmware/efi/efivars" ]; then
         preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
     else
-        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-BIOS-GPT.cfg"
+        echo -e "脚本暂不支持BIOS引导+GPT分区的系统!" && exit 1
     fi
 else
     # 对于MBR分区表的原有处理
@@ -156,7 +157,7 @@ fi
 echo ''
 echo ''
 echo ''
-echo "配置完成，手动重启机器后开始自动安装，建议等待15-30分钟后尝试连接。"
+echo "配置完成，手动重启机器后开始自动安装，建议等待10分钟后尝试连接。"
 echo "如果要查看安装进度，可以连接VNC"
 echo "SSH端：22，密码：123456abcd"
 echo ''
