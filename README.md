@@ -4,9 +4,9 @@
 
 脚本运行要求：  
 > 系统：`Debian/Ubuntu` ｜ `Centos/Redhat`  
-> 引导方式和分区类型：`BIOS+MRB` ｜ `UEFI+GPT`  
+> 引导方式和分区类型：`BIOS+MBR` ｜ `UEFI+GPT`  
 
-理论来说大部分系统都支持的，除非你的机器比较阴间：`BIOS+GPT`, 那本脚本暂时不支持。
+理论来说大部分系统都支持的，除非你的机器比较阴间，使用的是：`Hybrid MBR 混合分区表`, 那本脚本暂时不支持。
 
 目前测试过的平台：
 1. Dogyun  引导方式及分区：BIOS+MBR
