@@ -95,11 +95,12 @@ if [ "$partition_table_type" = "gpt" ]; then
     if [ -d "/sys/firmware/efi/efivars" ]; then
         preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
     else
-        echo ""
-        echo ""
-        echo -e "脚本暂不支持BIOS引导+GPT分区的系统!" && exit 1
-        echo ""
-        echo ""
+        echo ''
+        echo ''
+        echo -e "脚本暂不支持BIOS引导+GPT分区的系统!"
+        echo ''
+        echo ''
+        exit 1
     fi
 else
     # 对于MBR分区表的原有处理
