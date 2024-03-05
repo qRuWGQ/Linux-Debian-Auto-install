@@ -98,7 +98,7 @@ if [ "$partition_table_type" = "gpt" ]; then
     else
         echo ''
         echo ''
-        echo -e "脚本暂不支持BIOS引导+GPT分区的系统!"
+        echo -e "本脚本暂不支持 Hybrid MBR 混合分区表!"
         echo ''
         echo ''
         exit 1
