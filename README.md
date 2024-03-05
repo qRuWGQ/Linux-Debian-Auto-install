@@ -4,14 +4,17 @@
 
 脚本运行要求：  
 > 系统：`Debian/Ubuntu` ｜ `Centos/Redhat`  
-> 引导方式和分区类型：`BIOS+MBR` ｜ `UEFI+GPT`  
+> 引导方式和分区表类型：`BIOS+MBR` ｜ `UEFI+GPT`  
 
-理论来说大部分系统都支持的，除非你的机器比较阴间，使用的是：`Hybrid MBR 混合分区表`, 那本脚本暂时不支持。
+目前测试过的平台：  
+| 平台 | 引导方式 | 分区表类型 |
+| --- | --- | --- |
+| Dogyun | BIOS | MBR |
+| Aliyun | BIOS | MBR |
+| Vultr  | UEFI | GPT |
 
-目前测试过的平台：
-1. Dogyun  引导方式及分区：BIOS+MBR
-2. vultr   引导方式及分区：UEFI+GPT
-3. Aliyun  引导方式及分区：BIOS+MBR
+正常情况一般都支持，除非你的分区表类型比较阴间，使用的是：`Hybrid MBR 混合分区表`, 那本脚本暂时不支持，目前已知不支持的平台：`HostKvm`
+
 
 其他自测，最好通过VNC控制台观察安装过程
 
