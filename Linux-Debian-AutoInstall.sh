@@ -2,13 +2,15 @@
 
 clear
 
-echo ''
-echo ''
+set -e
+
+echo
+echo
 echo '=========================='
 echo '=====Debian12 自动安装脚本====='
 echo '=========================='
-echo ''
-echo ''
+echo
+echo
 
 if [[ -f /etc/redhat-release ]]; then
   release="centos"
@@ -29,9 +31,9 @@ elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
 [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
 
 if [[ "${release}" == "centos" ]]; then
-    yum -y install wget
+  yum -y install wget
 elif [[ "${release}" == "debian" || "${release}" == "ubuntu" ]]; then
-    apt-get -y install wget
+  apt-get -y install wget
 fi
 
 # 获取 /boot 目录所在分区（例如 /dev/sda1）
@@ -56,14 +58,14 @@ disk_counter=0
 
 # 遍历每个磁盘，判断 /boot 目录所在磁盘编号
 for disk in $disks; do
-    device="/dev/$disk"
+  device="/dev/$disk"
 
-    if [ "$device" = "$boot_device" ]; then
-        boot_disk_number=$disk_counter
-        break
-    fi
+  if [ "$device" = "$boot_device" ]; then
+    boot_disk_number=$disk_counter
+    break
+  fi
 
-    disk_counter=$((disk_counter + 1))
+  disk_counter=$((disk_counter + 1))
 done
 
 # 初始化计数器
@@ -71,70 +73,112 @@ disk_counter=0
 
 # 遍历 /boot 目录所在磁盘的所有分区，判断 /boot 目录所在分区编号
 for disk in $partition; do
-    device="/dev/$disk"
-    
-    if [ "$device" = "$boot_partition" ]; then
-        boot_partition_number=$disk_counter
-        break
-    fi
-    
-    disk_counter=$((disk_counter + 1))
+  device="/dev/$disk"
+  
+  if [ "$device" = "$boot_partition" ]; then
+    boot_partition_number=$disk_counter
+    break
+  fi
+  
+  disk_counter=$((disk_counter + 1))
 done
 
 # 检测分区表类型
 partition_table_type=$(fdisk -l $boot_device 2>/dev/null | grep 'Disklabel type' | awk '{print $3}')
 
 if [ "$partition_table_type" = "gpt" ]; then
-    # 对于GPT分区表的处理
-    if [ $boot_partition_number -eq 0 ]; then
-        partition="hd$boot_disk_number"
-    else
-        partition="hd$boot_disk_number,gpt$boot_partition_number"
-    fi
-    
-    # 如果是GPT分区，但是却不是UEFI引导
-    if [ -d "/sys/firmware/efi/efivars" ]; then
-        preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
-    else
-        echo ''
-        echo ''
-        echo -e "本脚本暂不支持 Hybrid MBR 混合分区表!"
-        echo ''
-        echo ''
-        exit 1
-    fi
+  # 对于GPT分区表的处理
+  if [ $boot_partition_number -eq 0 ]; then
+    partition="hd$boot_disk_number"
+  else
+    partition="hd$boot_disk_number,gpt$boot_partition_number"
+  fi
+  
+  # 如果是GPT分区，但是却不是UEFI引导
+  if [ -d "/sys/firmware/efi/efivars" ]; then
+    preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-GPT.cfg"
+  else
+    echo ''
+    echo ''
+    echo -e "本脚本暂不支持 Hybrid MBR 混合分区表!"
+    echo ''
+    echo ''
+    exit 1
+  fi
 else
-    # 对于MBR分区表的原有处理
-    if [ $boot_partition_number -eq 0 ]; then
-        partition="hd$boot_disk_number"
-    else
-        partition="hd$boot_disk_number,msdos$boot_partition_number"
-    fi
-    
-    preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
+  # 对于MBR分区表的原有处理
+  if [ $boot_partition_number -eq 0 ]; then
+    partition="hd$boot_disk_number"
+  else
+    partition="hd$boot_disk_number,msdos$boot_partition_number"
+  fi
+  
+  preseed_cfg="https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed-MBR.cfg"
 fi
 
 # 判断 /boot 目录所在分区的挂载目录
 boot_mout_dir=$(findmnt -n -o TARGET $boot_partition)
 if [ "$boot_mout_dir" = "/boot" ]; then
-    boot_mout_dir="/"
+  boot_mout_dir="/"
 else
-    boot_mout_dir="/boot/"
+  boot_mout_dir="/boot/"
 fi
 
-rm -fr /boot/debian-netboot-install
+mirror_list=(
+  [1]=mirrors.tuna.tsinghua.edu.cn
+  [2]=debian.csail.mit.edu
+  [3]=mirror.xtom.com.hk
+)
 
-mkdir -p /boot/debian-netboot-install
+declare -a mirror_ping
 
-wget -P /boot/debian-netboot-install https://mirror.xtom.com.hk/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
+echo
+echo
+echo "正在对APT镜像源进行延迟测试..."
+echo
+echo
 
-wget -P /boot/debian-netboot-install https://mirror.xtom.com.hk/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux
+for i in "${mirror_list[@]}"; do
+  ping_res=$(ping -c 3 $i 2>&1 | tail -1 | awk '{print $4}' | cut -d'/' -f2)
+  if [ "$ping_res" = "or" ]; then
+    mirror_ping+=("超时")
+  else
+    mirror_ping+=($ping_res)
+  fi
+done
+
+echo
+echo
+echo '========选择APT镜像源========='
+echo "1. 中国（清华大学）                Ping: ${mirror_ping[0]} ms : ${mirror_list[1]}"
+echo "2. 美国（麻省理工大学，国内也挺快）Ping: ${mirror_ping[1]} ms : ${mirror_list[2]}"
+echo "3. 香港（国内IP无法访问，其他正常）Ping: ${mirror_ping[2]} ms : ${mirror_list[3]}"
+echo
+
+read -p "选择镜像源 [1-3] : " mirror_index
+
+mirror_domain=${mirror_list[mirror_index]}
+
+debian_install_dir="/boot/debian-netboot-install"
+rm -fr $debian_install_dir
+mkdir -p $debian_install_dir
+mkdir -p $debian_install_dir/initrd
+wget -P $debian_install_dir/initrd https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
+wget -P $debian_install_dir https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux
+wget -P $debian_install_dir -O preseed.cfg $preseed_cfg
+
+source ./preseed.sh
+
+cd $debian_install_dir/initrd
+gzip -d < initrd.gz | cpio -id
+cp $debian_install_dir/preseed.cfg ./preseed.cfg
+rm -fr initrd.gz
+find . | cpio -H newc --create | gzip -9 > initrd.gz
 
 interface=$1
-
 # 如果没有提供网络接口名称，将其设置为 'auto'
 if [[ -z "$interface" ]]; then
-    interface="auto"
+  interface="auto"
 fi
 
 cat > /etc/grub.d/40_custom << EOF
@@ -160,11 +204,10 @@ elif [[ "${release}" == "debian" || "${release}" == "ubuntu" ]]; then
   grub-reboot "debian-netboot-install"
 fi
 
-echo ''
-echo ''
-echo ''
+echo
+echo
 echo "配置完成，手动重启机器后开始自动安装，建议等待10分钟后尝试连接。"
 echo "如果要查看安装进度，可以连接VNC"
 echo "SSH端：22，密码：123456abcd"
-echo ''
-echo ''
+echo
+echo
