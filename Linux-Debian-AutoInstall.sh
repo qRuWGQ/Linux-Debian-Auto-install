@@ -189,7 +189,7 @@ exec tail -n +3 \$0
 # the 'exec tail' line above.
 menuentry 'debian-netboot-install' {
 set root=$partition
-linux ${boot_mout_dir}debian-netboot-install/linux auto=true priority=critical netcfg/choose_interface=$interface preseed/url=$preseed_cfg
+linux ${boot_mout_dir}debian-netboot-install/linux auto=true priority=critical netcfg/choose_interface=$interface
 initrd ${boot_mout_dir}debian-netboot-install/initrd.gz
 }
 EOF
