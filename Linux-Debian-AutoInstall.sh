@@ -124,7 +124,7 @@ fi
 
 rm -fr /boot/debian-netboot-install
 
-mkdir /boot/debian-netboot-install
+mkdir -p /boot/debian-netboot-install
 
 wget -P /boot/debian-netboot-install https://mirror.xtom.com.hk/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
 
