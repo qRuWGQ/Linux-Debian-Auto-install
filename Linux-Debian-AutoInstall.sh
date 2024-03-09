@@ -130,29 +130,12 @@ mirror_list=(
   [3]=mirror.xtom.com.hk
 )
 
-declare -a mirror_ping
-
-echo
-echo
-echo "正在对APT镜像源进行延迟测试..."
-echo
-echo
-
-for i in "${mirror_list[@]}"; do
-  ping_res=$(ping -c 3 $i 2>&1 | tail -1 | awk '{print $4}' | cut -d'/' -f2)
-  if [ "$ping_res" = "or" ]; then
-    mirror_ping+=("超时")
-  else
-    mirror_ping+=($ping_res)
-  fi
-done
-
 echo
 echo
 echo '========选择APT镜像源========='
-echo "1. 中国（清华大学）                Ping: ${mirror_ping[0]} ms : ${mirror_list[1]}"
-echo "2. 美国（麻省理工大学，国内也挺快）Ping: ${mirror_ping[1]} ms : ${mirror_list[2]}"
-echo "3. 香港（国内IP无法访问，其他正常）Ping: ${mirror_ping[2]} ms : ${mirror_list[3]}"
+echo "1. 中国 清华大学    ${mirror_list[1]}"
+echo "2. 美国 麻省理工大学 ${mirror_list[2]}"
+echo "3. 香港 中国无法访问 ${mirror_list[3]}"
 echo
 
 read -p "选择镜像源 [1-3] : " mirror_index
