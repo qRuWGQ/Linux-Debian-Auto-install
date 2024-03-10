@@ -116,25 +116,6 @@ rm -fr ~/initrd && mkdir ~/initrd
 wget -P ~/initrd https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
 wget -P $debian_install_dir https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux
 
-# 生成preseed.cfg配置
-wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/dev/preseed.sh && source ./preseed.sh
-
-# 解压initrd.gz，并生成preseed.cfg文件
-cd ~/initrd
-echo '解包中...'
-gzip -d initrd.gz && cpio -idmu < initrd && echo '解包完成'
-echo
-echo '创建 pressed.cfg 文件并导入'
-rm -fr initrd
-cat <<EOF > ~/initrd/preseed.cfg
-$preseed
-EOF
-echo
-echo '重新归档压缩中...'
-find . | cpio -H newc --create | gzip -9 > $debian_install_dir/initrd.gz && echo '归档压缩完成'
-echo
-echo
-
 # 设置使用哪一个网卡
 read -e -p "网卡名称, 默认auto自动设置 : " -i "auto" interface
 # 如果留空，将其设置为 'auto'
@@ -157,8 +138,26 @@ function set_root_pass() {
     set_root_pass
   fi
 }
-
 set_root_pass
+
+# 生成preseed.cfg配置
+wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/dev/preseed.sh && source ./preseed.sh
+
+# 解压initrd.gz，并生成preseed.cfg文件
+cd ~/initrd
+echo '解包中...'
+gzip -d initrd.gz && cpio -idmu < initrd && echo '解包完成'
+echo
+echo '创建 pressed.cfg 文件并导入'
+rm -fr initrd
+cat <<EOF > ~/initrd/preseed.cfg
+$preseed
+EOF
+echo
+echo '重新归档压缩中...'
+find . | cpio -H newc --create | gzip -9 > $debian_install_dir/initrd.gz && echo '归档压缩完成'
+echo
+echo
 
 # 自定义启动项
 cat <<EOF > /etc/grub.d/40_custom

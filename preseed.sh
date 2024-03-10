@@ -120,7 +120,7 @@ d-i mirror/http/proxy string
 d-i clock-setup/utc boolean true
 d-i time/zone string Asia/Hong_Kong
 # 分区设置
-$partman
+${partman}
 # 设置root用户密码
 d-i passwd/root-login boolean true
 d-i passwd/root-password-crypted password ${root_pass}
