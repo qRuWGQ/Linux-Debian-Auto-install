@@ -141,6 +141,24 @@ read -e -p "网卡名称, 默认auto自动设置 : " -i "auto" interface
 if [[ -z "$interface" ]]; then
   interface="auto"
 fi
+echo
+echo
+
+echo '设置ROOT密码'
+function set_root_pass() {
+  root_pass=$(openssl passwd -6)
+  if [ $? -eq 0 ]; then
+    echo '密码设置成功'
+    echo
+    echo
+  else
+    echo
+    echo '两次输入的密码不一致，重新输入'
+    set_root_pass
+  fi
+}
+
+set_root_pass
 
 # 自定义启动项
 cat <<EOF > /etc/grub.d/40_custom
@@ -151,7 +169,7 @@ exec tail -n +3 \$0
 # the 'exec tail' line above.
 menuentry 'debian-netboot-install' {
 set root=${partition}
-linux ${boot_mout_dir}debian-netboot-install/linux auto=true priority=critical netcfg/choose_interface=$interface
+linux ${boot_mout_dir}debian-netboot-install/linux auto=true priority=critical netcfg/choose_interface=${interface}
 initrd ${boot_mout_dir}debian-netboot-install/initrd.gz
 }
 EOF
@@ -170,8 +188,8 @@ fi
 
 echo
 echo
-echo "配置完成，手动重启机器后开始自动安装，建议等待15分钟后尝试连接。"
+echo "配置完成，手动重启机器后开始自动安装，建议等待15分钟后尝试连接。注：网络或带宽较慢的机器可能需要更长时间！"
 echo "如果要查看安装进度，可以连接VNC"
-echo "SSH端：22，密码：123456abcd"
+echo "SSH端口：22"
 echo
 echo

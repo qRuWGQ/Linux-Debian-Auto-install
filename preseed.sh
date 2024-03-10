@@ -79,19 +79,19 @@ d-i partman-auto/choose_recipe select boot-root
 d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
               512 512 1024 ext4                               \
-                      $primary{ } $bootable{ }              \
+                      $primary{ } $bootable{ }                \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
-                      $primary{ }                            \
+                      $primary{ }                             \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
               .                                               \
               512 1024 200% linux-swap                        \
-                      $primary{ }                            \
+                      $primary{ }                             \
                       method{ swap } format{ }                \
               .
 d-i partman/confirm_write_new_label boolean true
@@ -108,7 +108,7 @@ preseed="""
 d-i debian-installer/locale string en_US.UTF-8
 d-i keyboard-configuration/xkb-keymap select us
 # 网络设置
-d-i netcfg/choose_interface select auto
+d-i netcfg/choose_interface select ${interface}
 d-i netcfg/get_hostname string debian
 d-i netcfg/get_nameservers string 8.8.8.8
 # 设置镜像源
@@ -123,8 +123,7 @@ d-i time/zone string Asia/Hong_Kong
 $partman
 # 设置root用户密码
 d-i passwd/root-login boolean true
-d-i passwd/root-password password 123456abcd
-d-i passwd/root-password-again password 123456abcd
+d-i passwd/root-password-crypted password ${root_pass}
 d-i passwd/make-user boolean false
 # 配置apt和软件选择
 tasksel tasksel/first multiselect standard
