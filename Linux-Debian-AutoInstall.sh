@@ -1,8 +1,6 @@
 #!/bin/bash
 
 clear
-
-set -e
 set -u
 
 echo
@@ -123,12 +121,19 @@ wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-A
 
 # 解压initrd.gz，并生成preseed.cfg文件
 cd ~/initrd
-gzip -d < initrd.gz | cpio -id
-cat <<'EOF' > ~/initrd/preseed.cfg
+echo '解包中...'
+gzip -d initrd.gz && cpio -idmu < initrd && echo '解包完成'
+echo
+echo '创建 pressed.cfg 文件并导入'
+rm -fr initrd
+cat <<EOF > ~/initrd/preseed.cfg
 $preseed
 EOF
-rm -fr initrd.gz
-find . | cpio -H newc --create | gzip -9 > $debian_install_dir/initrd.gz
+echo
+echo '重新归档压缩中...'
+find . | cpio -H newc --create | gzip -9 > $debian_install_dir/initrd.gz && echo '归档压缩完成'
+echo
+echo
 
 # 设置使用哪一个网卡
 read -e -p "网卡名称, 默认auto自动设置 : " -i "auto" interface

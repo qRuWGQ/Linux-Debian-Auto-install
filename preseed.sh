@@ -26,13 +26,13 @@ d-i partman-auto/choose_recipe select boot-root
 d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
               512 512 1024 free                               \
-                      \$iflabel{ gpt }                         \
-                      \$reusemethod{ }                         \
+                      $iflabel{ gpt }                         \
+                      $reusemethod{ }                         \
                       method{ efi }                           \
                       format{ }                               \
               .                                               \
               512 512 1024 ext4                               \
-                      \$primary{ } \$bootable{ }                \
+                      $primary{ } $bootable{ }                \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
@@ -79,19 +79,19 @@ d-i partman-auto/choose_recipe select boot-root
 d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
               512 512 1024 ext4                               \
-                      \$primary{ } \$bootable{ }              \
+                      $primary{ } $bootable{ }              \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
-                      \$primary{ }                            \
+                      $primary{ }                            \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
               .                                               \
               512 1024 200% linux-swap                        \
-                      \$primary{ }                            \
+                      $primary{ }                            \
                       method{ swap } format{ }                \
               .
 d-i partman/confirm_write_new_label boolean true
