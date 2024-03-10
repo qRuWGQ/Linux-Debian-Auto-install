@@ -113,27 +113,22 @@ read -e -p "选择镜像源 [0-3] : " -i "0" mirror_index
 mirror_domain=${mirror_list[mirror_index]}
 
 debian_install_dir="/boot/debian-netboot-install"
-rm -fr $debian_install_dir
-mkdir -p $debian_install_dir
-mkdir -p $debian_install_dir/initrd
-wget -P $debian_install_dir/initrd https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
+rm -fr $debian_install_dir && mkdir -p $debian_install_dir
+rm -fr ~/initrd && mkdir ~/initrd
+wget -P ~/initrd https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
 wget -P $debian_install_dir https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux
 
 # 生成preseed.cfg配置
-wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/dev/preseed.sh
-source ./preseed.sh
+wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/dev/preseed.sh && source ./preseed.sh
 
-# 生成preseed.cfg文件
-cat <<'EOF' > $debian_install_dir/preseed.cfg
+# 解压initrd.gz，并生成preseed.cfg文件
+cd ~/initrd
+gzip -d < initrd.gz | cpio -id
+cat <<'EOF' > ~/initrd/preseed.cfg
 $preseed
 EOF
-
-# 将pressed.cfg文件导入initrd.gz中
-cd $debian_install_dir/initrd
-gzip -d < initrd.gz | cpio -id
-cp $debian_install_dir/preseed.cfg ./preseed.cfg
 rm -fr initrd.gz
-find . | cpio -H newc --create | gzip -9 > initrd.gz
+find . | cpio -H newc --create | gzip -9 > $debian_install_dir/initrd.gz
 
 # 设置使用哪一个网卡
 read -e -p "网卡名称, 默认auto自动设置 : " -i "auto" interface
