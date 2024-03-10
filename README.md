@@ -21,7 +21,7 @@
 
 ### 一键脚本：
 ```shell
-curl -O https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/dev/Linux-Debian-AutoInstall.sh && chmod +x ./Linux-Debian-AutoInstall.sh
+curl -O https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh && chmod +x ./Linux-Debian-AutoInstall.sh
 
 ./Linux-Debian-AutoInstall.sh
 ```
