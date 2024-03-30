@@ -141,7 +141,7 @@ function set_root_pass() {
 set_root_pass
 
 # 生成preseed.cfg配置
-wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/dev/preseed.sh && source ./preseed.sh
+wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed.sh && source ./preseed.sh
 
 # 解压initrd.gz，并生成preseed.cfg文件
 cd ~/initrd
