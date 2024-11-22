@@ -7,7 +7,6 @@
 脚本运行要求:   
 > 系统: `Debian/Ubuntu` ｜ `Centos/Redhat`  
 > 引导方式和分区表类型: `BIOS+MBR` ｜ `UEFI+GPT`  
-> 内存推荐: >=1000MB ，否则可能无法完成系统安装
 
 功能一览:  
 • 自动识别引导方式和分区表类型  
@@ -22,7 +21,7 @@
 | 平台 | 引导方式 | 分区表类型 |
 | --- | --- | --- |
 | Dogyun | BIOS | MBR |
-| Aliyun | BIOS | MBR |
+| 阿里云轻量云服务器 | BIOS | MBR |
 | Vultr  | UEFI | GPT |
 
 正常情况一般都支持，除非你的分区表类型比较阴间，使用的是：`Hybrid MBR 混合分区表`, 那本脚本暂时不支持，目前已知不支持的平台：`HostKvm`
