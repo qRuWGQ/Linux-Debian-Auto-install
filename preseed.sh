@@ -105,8 +105,8 @@ fi
 preseed="""
 # 预配置文件
 # 低内存模式
-di lowmem/low boolean true 
-di lowmem/insufficient boolean true
+d-i lowmem/low boolean true
+d-i lowmem/insufficient boolean true
 # 语言和地区
 d-i debian-installer/locale string en_US.UTF-8
 d-i keyboard-configuration/xkb-keymap select us
