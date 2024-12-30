@@ -6,7 +6,6 @@
 
 脚本运行要求:   
 > 系统: `Debian/Ubuntu` ｜ `Centos/Redhat`  
-> 引导方式和分区表类型: `BIOS+MBR` ｜ `UEFI+GPT`  
 
 功能一览:  
 • 自动识别引导方式和分区表类型  
