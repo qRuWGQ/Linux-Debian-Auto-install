@@ -137,6 +137,7 @@ d-i lowmem/insufficient boolean true
 # 语言和地区
 d-i debian-installer/locale string en_US.UTF-8
 d-i debian-installer/country string US
+d-i debian-installer/language string en
 d-i keyboard-configuration/xkb-keymap select us
 # 网络设置
 d-i netcfg/choose_interface select ${interface}
