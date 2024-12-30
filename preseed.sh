@@ -52,12 +52,39 @@ d-i partman/confirm_nooverwrite boolean true
 EOF
 
   else
-    echo ''
-    echo ''
-    echo -e "本脚本暂不支持 Hybrid MBR 混合分区表!"
-    echo ''
-    echo ''
-    exit 1
+    read -r -d '' partman <<'EOF'
+d-i partman-auto/method string regular
+d-i partman-partitioning/choose_label select gpt
+d-i partman-partitioning/default_label string gpt
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto/choose_recipe select boot-root
+d-i partman-auto/expert_recipe string                         \
+      boot-root ::                                            \
+              1 1 1 free                                      \
+                      method{ bios_grub }                    \
+              .                                               \
+              512 512 1024 ext4                               \
+                      $primary{ } $bootable{ }                \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /boot }                     \
+              .                                               \
+              1000 10000 1000000000 ext4                      \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ / }                         \
+              .                                               \
+              512 1024 200% linux-swap                        \
+                      method{ swap } format{ }                \
+              .
+d-i partman/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+EOF
   fi
   
 else
