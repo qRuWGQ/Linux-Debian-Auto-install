@@ -14,7 +14,6 @@ if [ "$partition_table_type" = "gpt" ]; then
   # 判断是否是UEFI引导
   if [ -d "/sys/firmware/efi/efivars" ]; then
     read -r -d '' partman <<'EOF'
-# d-i partman-auto/disk string /dev/sda
 d-i partman-auto/method string regular
 d-i partman-partitioning/choose_label select gpt
 d-i partman-partitioning/default_label string gpt
@@ -96,7 +95,6 @@ else
   fi
   
   read -r -d '' partman <<'EOF'
-# d-i partman-auto/disk string /dev/sda
 d-i partman-auto/method string regular
 d-i partman-lvm/device_remove_lvm boolean true
 d-i partman-md/device_remove_md boolean true
@@ -152,6 +150,7 @@ d-i mirror/http/proxy string
 d-i clock-setup/utc boolean true
 d-i time/zone string Asia/Hong_Kong
 # 分区设置
+d-i partman-auto/disk string ${boot_device}
 ${partman}
 # 设置root用户密码
 d-i passwd/root-login boolean true
