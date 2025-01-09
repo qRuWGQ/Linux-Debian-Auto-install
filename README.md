@@ -28,10 +28,7 @@
 ~~正常情况一般都支持，除非你的分区表类型比较阴间，使用的是：`Hybrid MBR 混合分区表`, 那本脚本暂时不支持，目前已知不支持的平台：`HostKvm`~~  
 问题已得到解决，现在支持使用gpt分区+bios引导的系统了
 
-可以通过内置的SSH控制台或者VNC控制台观察安装过程  
-SSH控制台用户名：`installer`，密码同你在脚本设置的root密码  
-不用多虑，这是Debian preseed内置的功能，系统安装完成后自动删除这个用户
-
+可以通过内置的SSH控制台或者VNC控制台观察安装过程或干预，例如安装过程出现意外停顿了，需要手动操作  
 ### 下载脚本：
 ```shell
 curl -O https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh && chmod +x ./Linux-Debian-AutoInstall.sh

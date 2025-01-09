@@ -160,8 +160,8 @@ ${network_static}
 d-i anna/choose_modules string network-console
 d-i preseed/early_command string anna-install network-console
 # 设置网络控制台的密码，默认用户名： installer
-d-i network-console/password password ${root_pass}
-d-i network-console/password-again password ${root_pass}
+d-i network-console/password password ${netconsole_pass}
+d-i network-console/password-again password ${netconsole_pass}
 
 # 设置镜像源
 d-i mirror/country string manual

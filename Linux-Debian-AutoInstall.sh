@@ -180,6 +180,19 @@ function set_root_pass() {
 }
 set_root_pass
 
+echo
+echo
+
+function set_console_pass() {
+  read -e -p "临时SSH控制台密码 : " netconsole_pass
+  if [[ -z "netconsole_pass" || ${#var} -lt 6 ]]; then
+    echo "密码为空或小于6位数…"
+    set_console_pass
+  fi
+}
+
+set_console_pass
+
 # 生成preseed.cfg配置
 wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed.sh && source ./preseed.sh
 
@@ -227,9 +240,14 @@ fi
 
 echo
 echo
-echo "配置完成，手动重启机器后开始自动安装，建议等待15分钟后尝试连接。注：网络或带宽较慢的机器可能需要更长时间！"
-echo "如果要查看安装进度，可以连接SSH控制台或VNC"
-echo "用户名：installer，密码同刚才设置的root密码，系统安装完成后，这个用户会自动删除"
-echo "SSH端口：22"
+echo "配置完成，手动重启机器后开始自动安装，建议等待15-30分钟后尝试连接。注：带宽较慢或性能很差的机器可能需要更长时间！"
+echo "如果要查看安装进度，可以连接临时SSH控制台或VNC"
+echo "某些环境下不一定能完全自动安装成功，可以通过控制台进行手动操作下一步进行安装"
+echo
+echo
+echo "临时SSH控制台连接信息，系统安装完成后会自动删除"
+echo "用户名：installer"
+echo "密码： ${netconsole_pass}"
+echo "SSH端口：22，系统安装完成后也是这个端口"
 echo
 echo
