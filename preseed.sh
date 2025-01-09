@@ -8,7 +8,7 @@ d-i netcfg/dhcp_failed note
 d-i netcfg/dhcp_options select Configure network manually
 d-i netcfg/get_ipaddress string ${IP_ADDRESS}
 d-i netcfg/get_netmask string ${SUBNET_MASK}
-d-i netcfg/get_gateway string none
+d-i netcfg/get_gateway string ${GATEWAY}
 d-i netcfg/confirm_static boolean true
 EOF
 fi
@@ -158,6 +158,7 @@ ${network_static}
 
 # 启用网络控制台模块
 d-i anna/choose_modules string network-console
+d-i preseed/early_command string anna-install network-console
 # 设置网络控制台的密码，默认用户名： installer
 d-i network-console/password password ${root_pass}
 d-i network-console/password-again password ${root_pass}

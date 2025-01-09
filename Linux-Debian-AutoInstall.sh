@@ -139,6 +139,8 @@ else
   # 获取子网掩码
   SUBNET_MASK_CIDR=$(ip addr show $interface | grep 'inet ' | awk '{print $2}' | cut -d'/' -f2)
   SUBNET_MASK=$(cidr_to_mask $SUBNET_MASK_CIDR)
+  # 获取网关IP地址
+  GATEWAY=$(ip route | grep default | awk '{print $3}')
 fi
 
 echo
