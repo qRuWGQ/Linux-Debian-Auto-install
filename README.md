@@ -20,7 +20,7 @@
 | 平台 | 引导方式 | 分区表类型 | 注意事项 |
 | --- | --- | --- | --- |
 | Dogyun | BIOS | MBR | 暂无 |
-| 阿里云ECS服务器| UEFI | GPT | 未知原因，先安装Debian 10，才能执行本脚本 | 
+| 阿里云ECS服务器| BIOS | MBR | 未知原因，先安装Debian 10，才能执行本脚本 | 
 | 阿里云轻量云服务器 | BIOS | MBR | 暂无 |
 | 阿里云轻量云服务器 | BIOS | GPT | 暂无 |
 | Vultr  | UEFI | GPT | 暂无 |
