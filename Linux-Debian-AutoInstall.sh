@@ -185,7 +185,7 @@ echo
 
 function set_console_pass() {
   read -e -p "临时SSH控制台密码 : " netconsole_pass
-  if [[ -z "netconsole_pass" || ${#var} -lt 6 ]]; then
+  if [[ -z "$netconsole_pass" || ${#var} -lt 6 ]]; then
     echo "密码为空或小于6位数…"
     set_console_pass
   fi
