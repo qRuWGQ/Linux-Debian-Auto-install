@@ -180,9 +180,6 @@ function set_root_pass() {
 }
 set_root_pass
 
-echo
-echo
-
 function set_console_pass() {
   read -e -p "临时SSH控制台密码 : " netconsole_pass
   if [[ -z "$netconsole_pass" || ${#netconsole_pass} -lt 6 ]]; then
@@ -198,6 +195,8 @@ wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-A
 
 # 解压initrd.gz，并生成preseed.cfg文件
 cd ~/initrd
+echo
+echo
 echo '解包中...'
 gzip -d initrd.gz && cpio -idmu < initrd && echo '解包完成'
 echo

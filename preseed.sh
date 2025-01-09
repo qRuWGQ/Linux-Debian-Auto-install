@@ -44,11 +44,13 @@ d-i partman-auto/expert_recipe string                         \
               .                                               \
               512 512 1024 ext4                               \
                       $primary{ } $bootable{ }                \
-                      method{ format } filesystem{ ext4 }     \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
-                      method{ format } filesystem{ ext4 }     \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
               .                                               \
               512 1024 200% linux-swap                        \
@@ -77,11 +79,13 @@ d-i partman-auto/expert_recipe string                         \
               .                                               \
               512 512 1024 ext4                               \
                       $primary{ } $bootable{ }                \
-                      method{ format } filesystem{ ext4 }     \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
-                      method{ format } filesystem{ ext4 }     \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
               .                                               \
               512 1024 200% linux-swap                        \
@@ -113,12 +117,14 @@ d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
               512 512 1024 ext4                               \
                       $primary{ } $bootable{ }                \
-                      method{ format } filesystem{ ext4 }     \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
                       $primary{ }                             \
-                      method{ format } filesystem{ ext4 }     \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
               .                                               \
               512 1024 200% linux-swap                        \
