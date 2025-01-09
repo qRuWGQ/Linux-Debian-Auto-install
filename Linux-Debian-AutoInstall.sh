@@ -97,6 +97,50 @@ mirror_list=(
   [3]=mirror.xtom.com.hk
 )
 
+# 设置使用哪一个网卡
+read -e -p "网卡名称, 默认auto自动设置 : " -i "auto" interface
+read -e -p "DNS : " -i "8.8.8.8" dnsaddr
+# 如果留空，将其设置为 'auto'
+if [[ -z "$interface" ]]; then
+  interface="auto"
+fi
+
+# 获取默认网卡
+if [ "$interface" = "auto" ]; then
+  default_route=$(ip route | grep default)
+  if [ -z "$default_route" ]; then
+    echo "无法判断默认网卡，请手动指定网卡名称"
+    exit 1
+  else
+    interface=$(echo $default_route | awk '{print $5}')
+  fi
+else
+  if ! ip link show "$interface" > /dev/null 2>&1; then
+    echo "错误：网卡 $interface 不存在。"
+    exit 1
+  fi
+fi
+
+# 子网掩码转换
+function cidr_to_mask() {
+    local cidr=$1
+    local mask=$(( (1 << 32) - (1 << (32 - cidr)) ))
+    echo "$(( (mask >> 24) & 255 )).$(( (mask >> 16) & 255 )).$(( (mask >> 8) & 255 )).$(( mask & 255 ))"
+}
+
+#判断网络配置是dhcp或static，并获取ip和子网掩码
+IP_METHOD=$(ip addr show "$interface" | grep "dynamic")
+if [ ! -z "$IP_METHOD" ]; then
+  interface_type="dhcp"
+else
+  interface_type="static"
+  # 获取IP地址
+  IP_ADDRESS=$(ip addr show $interface | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1)
+  # 获取子网掩码
+  SUBNET_MASK_CIDR=$(ip addr show $interface | grep 'inet ' | awk '{print $2}' | cut -d'/' -f2)
+  SUBNET_MASK=$(cidr_to_mask $SUBNET_MASK_CIDR)
+fi
+
 echo
 echo
 echo '========选择APT镜像源========='
@@ -116,12 +160,6 @@ rm -fr ~/initrd && mkdir ~/initrd
 wget -P ~/initrd https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
 wget -P $debian_install_dir https://${mirror_domain}/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux
 
-# 设置使用哪一个网卡
-read -e -p "网卡名称, 默认auto自动设置 : " -i "auto" interface
-# 如果留空，将其设置为 'auto'
-if [[ -z "$interface" ]]; then
-  interface="auto"
-fi
 echo
 echo
 

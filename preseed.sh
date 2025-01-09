@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# 判断网络模式是dhcp或static
+if [ "$interface_type" = "static" ]; then
+  read -r -d '' network_static <<EOF
+d-i netcfg/disable_autoconfig boolean true
+d-i netcfg/dhcp_failed note
+d-i netcfg/dhcp_options select Configure network manually
+d-i netcfg/get_ipaddress string ${IP_ADDRESS}
+d-i netcfg/get_netmask string ${SUBNET_MASK}
+d-i netcfg/get_gateway string none
+d-i netcfg/confirm_static boolean true
+EOF
+fi
+
 # 检测分区表类型
 partition_table_type=$(fdisk -l $boot_device 2>/dev/null | grep 'Disklabel type' | awk '{print $3}')
 
@@ -140,7 +153,8 @@ d-i time/zone string Asia/Hong_Kong
 # 网络设置
 d-i netcfg/choose_interface select ${interface}
 d-i netcfg/get_hostname string debian
-d-i netcfg/get_nameservers string 8.8.8.8
+d-i netcfg/get_nameservers string ${dnsaddr}
+${network_static}
 
 # 启用网络控制台模块
 d-i anna/choose_modules string network-console
