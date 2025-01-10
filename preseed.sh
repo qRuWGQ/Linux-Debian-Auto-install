@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 判断网络模式是dhcp或static
+network_static=""
 if [ "$interface_type" = "static" ]; then
   read -r -d '' network_static <<EOF
 d-i netcfg/disable_autoconfig boolean true
