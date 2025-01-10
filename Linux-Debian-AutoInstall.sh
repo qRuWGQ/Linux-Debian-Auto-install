@@ -98,18 +98,13 @@ mirror_list=(
 )
 
 # 设置使用哪一个网卡
-read -e -p "网卡名称, 默认auto自动设置 : " -i "auto" interface
-read -e -p "DNS : " -i "8.8.8.8" dnsaddr
-# 如果留空，将其设置为 'auto'
-if [[ -z "$interface" ]]; then
-  interface="auto"
-fi
+read -e -p "默认网口, auto 自动选择 : " -i "auto" interface
+read -e -p "DNS : " -i "8.8.8.8 1.1.1.1" dnsaddr
 
-# 获取默认网卡
-if [ "$interface" = "auto" ]; then
+if [ "$interface" = "auto" ] || [ -z "$interface" ]; then
   default_route=$(ip route | grep default)
   if [ -z "$default_route" ]; then
-    echo "无法判断默认网卡，请手动指定网卡名称"
+    echo "无法判断默认胃口，请手动填写网口名称"
     exit 1
   else
     interface=$(echo $default_route | awk '{print $5}')
@@ -145,7 +140,7 @@ fi
 
 echo
 echo
-echo '========选择APT镜像源========='
+echo '========选择下载和APT镜像源========='
 echo "0. 默认 官方源      ${mirror_list[0]}"
 echo "1. 中国 清华大学    ${mirror_list[1]}"
 echo "2. 美国 麻省理工大学 ${mirror_list[2]}"
@@ -180,15 +175,15 @@ function set_root_pass() {
 }
 set_root_pass
 
-function set_console_pass() {
-  read -e -p "临时SSH控制台密码 : " netconsole_pass
-  if [[ -z "$netconsole_pass" || ${#netconsole_pass} -lt 6 ]]; then
-    echo "密码为空或小于6位数…"
-    set_console_pass
-  fi
-}
+#function set_console_pass() {
+#  read -e -p "临时SSH控制台密码 : " netconsole_pass
+#  if [[ -z "$netconsole_pass" || ${#netconsole_pass} -lt 6 ]]; then
+#    echo "密码为空或小于6位数…"
+#    set_console_pass
+#  fi
+#}
 
-set_console_pass
+#set_console_pass
 
 # 生成preseed.cfg配置
 wget -O preseed.sh https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/preseed.sh && source ./preseed.sh
@@ -220,7 +215,7 @@ exec tail -n +3 \$0
 # the 'exec tail' line above.
 menuentry 'debian-netboot-install' {
 set root=${partition}
-linux ${boot_mout_dir}debian-netboot-install/linux auto=true priority=critical netcfg/choose_interface=${interface}
+linux ${boot_mout_dir}debian-netboot-install/linux auto=true priority=critical
 initrd ${boot_mout_dir}debian-netboot-install/initrd.gz
 }
 EOF
@@ -240,13 +235,10 @@ fi
 echo
 echo
 echo "配置完成，手动重启机器后开始自动安装，建议等待15-30分钟后尝试连接。注：带宽较慢或性能很差的机器可能需要更长时间！"
-echo "如果要查看安装进度，可以连接临时SSH控制台或VNC"
-echo "某些环境下不一定能完全自动安装成功，可以通过控制台进行手动操作下一步进行安装"
+echo "如果要查看安装进度请连接VNC"
+echo "某些环境下不一定能完全自动安装成功，可以通过VNC控制台进行手动操作下一步进行安装"
 echo
 echo
-echo "临时SSH控制台连接信息，系统安装完成后会自动删除"
-echo "用户名：installer"
-echo "密码： ${netconsole_pass}"
-echo "SSH端口：22，系统安装完成后也是这个端口"
+echo "SSH端口：22"
 echo
 echo

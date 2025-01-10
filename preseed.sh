@@ -158,17 +158,17 @@ d-i clock-setup/utc boolean true
 d-i time/zone string Asia/Hong_Kong
 
 # 网络设置
-d-i netcfg/choose_interface select ${interface}
+d-i netcfg/choose_interface select auto
 d-i netcfg/get_hostname string debian
 d-i netcfg/get_nameservers string ${dnsaddr}
 ${network_static}
 
 # 启用网络控制台模块
-d-i anna/choose_modules string network-console
-d-i preseed/early_command string anna-install network-console
+#d-i anna/choose_modules string network-console
+#d-i preseed/early_command string anna-install network-console
 # 设置网络控制台的密码，默认用户名： installer
-d-i network-console/password password ${netconsole_pass}
-d-i network-console/password-again password ${netconsole_pass}
+#d-i network-console/password password 123456
+#d-i network-console/password-again password 123456
 
 # 设置镜像源
 d-i mirror/country string manual
