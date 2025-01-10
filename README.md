@@ -17,14 +17,14 @@
 • 目前安装的系统是 Debian 12，后续会支持其他版本的系统
 
 目前测试过的平台:  
-| 平台 | 引导方式 | 分区表类型 | 注意事项 |
+| 平台 | 引导方式 | 分区表类型 | 说明 |
 | --- | --- | --- | --- |
-| Dogyun | BIOS | MBR | 暂无 |
-| 阿里云ECS服务器| BIOS | MBR | 未知原因，先安装Debian 10，才能执行本脚本 | 
-| 阿里云轻量云服务器 | BIOS | MBR | 暂无 |
-| 阿里云轻量云服务器 | BIOS | GPT | 暂无 |
-| Vultr  | UEFI | GPT | 暂无 |
-| LocVPS | BIOS | MBR | 暂无 |
+| Dogyun | BIOS | MBR | 支持 |
+| 阿里云ECS服务器| BIOS | MBR | 部分情况支持，使用脚本前，通过ecs面板将系统安装为Debian 10，不然脚本执行不成功| 
+| 阿里云轻量云服务器 | BIOS | MBR | 支持 |
+| 阿里云轻量云服务器 | BIOS | GPT | 支持 |
+| Vultr  | UEFI | GPT | 支持 |
+| LocVPS | BIOS | MBR | 支持 |
 
 ~~正常情况一般都支持，除非你的分区表类型比较阴间，使用的是：`Hybrid MBR 混合分区表`, 那本脚本暂时不支持，目前已知不支持的平台：`HostKvm`~~  
 问题已得到解决，现在支持使用bios引导+GPT分区的系统了  
