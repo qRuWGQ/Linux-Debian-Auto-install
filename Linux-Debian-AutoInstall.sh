@@ -104,14 +104,14 @@ read -e -p "DNS : " -i "8.8.8.8 1.1.1.1" dnsaddr
 if [ "$interface" = "auto" ] || [ -z "$interface" ]; then
   default_route=$(ip route | grep default)
   if [ -z "$default_route" ]; then
-    echo "无法判断默认胃口，请手动填写网口名称"
+    echo "无法判断默认网口，请手动填写网口名称"
     exit 1
   else
     interface=$(echo $default_route | awk '{print $5}')
   fi
 else
   if ! ip link show "$interface" > /dev/null 2>&1; then
-    echo "错误：网卡 $interface 不存在。"
+    echo "错误：指定的网口 $interface 不存在。"
     exit 1
   fi
 fi
