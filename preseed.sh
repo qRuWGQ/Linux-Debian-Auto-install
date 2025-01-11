@@ -38,9 +38,10 @@ d-i partman-lvm/confirm_nooverwrite boolean true
 d-i partman-auto/choose_recipe select boot-root
 d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
-              512 512 1024 free                               \
+              538 538 1024 free                               \
+                      $iflabel{ gpt }                         \
                       method{ efi } format{ }                 \
-                      filesystem{ vfat }                      \
+                      use_filesystem{ } filesystem{ vfat }    \
                       mountpoint{ /boot/efi }                 \
               .                                               \
               512 512 1024 ext4                               \
@@ -50,6 +51,7 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
+                      $primary{ }                             \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
@@ -85,6 +87,7 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
+                      $primary{ }                             \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
