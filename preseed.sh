@@ -202,7 +202,7 @@ popularity-contest popularity-contest/participate boolean false
 # 安装GRUB引导加载程序
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/with_other_os boolean true
-d-i grub-installer/bootdev string default
+d-i grub-installer/bootdev string ${boot_device}
 
 # 安装完成后执行命令
 d-i preseed/late_command string \
