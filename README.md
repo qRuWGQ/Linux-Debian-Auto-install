@@ -4,7 +4,7 @@
 
 脚本开源透明，安装包均来自官方，可放心食用
 
-脚本运行要求:   
+脚本运行要求:
 > 系统: `Debian/Ubuntu` ｜ `Centos/Redhat`  
 
 功能一览:  
@@ -17,10 +17,11 @@
 • 目前安装的系统是 Debian 12，后续会支持其他版本的系统
 
 目前测试过的平台:  
+
 | 平台 | 引导方式 | 分区表类型 | 说明 |
 | --- | --- | --- | --- |
 | Dogyun | BIOS | MBR | 支持 |
-| 阿里云ECS服务器| BIOS | MBR | 部分情况支持，使用脚本前，通过ecs面板将系统安装为Debian 10，不然脚本执行不成功| 
+| 阿里云ECS服务器| BIOS | MBR | 部分情况支持，使用脚本前，通过ecs面板将系统安装为Debian 10，不然脚本执行不成功|
 | 阿里云轻量云服务器 | BIOS | MBR | 支持 |
 | 阿里云轻量云服务器 | BIOS | GPT | 支持 |
 | Vultr  | UEFI | GPT | 支持 |
@@ -31,11 +32,14 @@
 
 某些环境不一定能完全自动安装成功，如果长时间未能登录SSH，自行前往VNC控制台进行查看或操作  
 
-### 下载脚本：
+## 下载脚本
+
 ```shell
-curl -O https://raw.githubusercontent.com/git-littlemo/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh && chmod +x ./Linux-Debian-AutoInstall.sh
+curl -O https://raw.githubusercontent.com/qRuWGQ/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh && chmod +x ./Linux-Debian-AutoInstall.sh
 ```  
-### 执行
+
+## 执行
+
 ```shell
 ./Linux-Debian-AutoInstall.sh
 ```
