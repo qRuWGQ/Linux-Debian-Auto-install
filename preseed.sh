@@ -38,11 +38,10 @@ d-i partman-lvm/confirm_nooverwrite boolean true
 d-i partman-auto/choose_recipe select boot-root
 d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
-              538 538 1024 free                               \
+              538 538 1075 free                               \
                       $iflabel{ gpt }                         \
+                      $reusemethod{ }                         \
                       method{ efi } format{ }                 \
-                      use_filesystem{ } filesystem{ vfat }    \
-                      mountpoint{ /boot/efi }                 \
               .                                               \
               512 512 1024 ext4                               \
                       $primary{ } $bootable{ }                \
@@ -51,7 +50,6 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
-                      $primary{ }                             \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
@@ -59,7 +57,7 @@ d-i partman-auto/expert_recipe string                         \
               512 1024 200% linux-swap                        \
                       method{ swap } format{ }                \
               .
-d-i partman/confirm_write_new_label boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
@@ -87,7 +85,6 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
-                      $primary{ }                             \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
@@ -95,7 +92,7 @@ d-i partman-auto/expert_recipe string                         \
               512 1024 200% linux-swap                        \
                       method{ swap } format{ }                \
               .
-d-i partman/confirm_write_new_label boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
@@ -126,16 +123,14 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ /boot }                     \
               .                                               \
               1000 10000 1000000000 ext4                      \
-                      $primary{ }                             \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
               .                                               \
               512 1024 200% linux-swap                        \
-                      $primary{ }                             \
                       method{ swap } format{ }                \
               .
-d-i partman/confirm_write_new_label boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
