@@ -124,7 +124,7 @@ function cidr_to_mask() {
 }
 
 #判断网络配置是dhcp或static，并获取ip和子网掩码
-IP_METHOD=$(ip addr show "$interface" | grep "dynamic")
+IP_METHOD=$(ip -o -4 addr show "$interface" | grep "dynamic")
 if [ ! -z "$IP_METHOD" ]; then
   interface_type="dhcp"
 else
