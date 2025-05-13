@@ -11,21 +11,22 @@ declare -A mirror_url=(
   [5]=debian.csail.mit.edu
 )
 
-# 获取系统架构
-function get_arch() {
+# 检查系统架构
+function is_arch() {
+  local -n conf=$1
   local arch=$(uname -m)
 
   case "$arch" in
   x86_64 | amd64)
-    echo "amd64"
+    conf["arch"]="amd64"
     return 0
     ;;
   i386 | i686)
-    echo "i386"
+    conf["arch"]="i386"
     return 0
     ;;
   aarch64 | arm64)
-    echo "arm64"
+    conf["arch"]="arm64"
     return 0
     ;;
   *)
@@ -440,10 +441,10 @@ function set_mirror() {
   rm -fr ${conf["mirror_dir"]} && mkdir -p ${conf["mirror_dir"]}
   rm -fr /root/initrd && mkdir /root/initrd
 
-  local down_url="https://${conf["mirror_domain"]}/debian/dists/bookworm/main/installer-${arch}/current/images/netboot/debian-installer/${arch}"
+  local down_url="https://${conf["mirror_domain"]}/debian/dists/bookworm/main/installer-${conf["arch"]}/current/images/netboot/debian-installer/${conf["arch"]}"
 
-  wget -P /root/initrd "${down_url}/initrd.gz"
-  wget -P ${conf["mirror_dir"]} "${down_url}/linux"
+  wget -P /root/initrd "${down_url}/initrd.gz" || { echo "下载 initrd.gz 失败，重试或更换镜像源"; exit 1; }
+  wget -P ${conf["mirror_dir"]} "${down_url}/linux" || { echo "下载 linux 失败，重试或更换镜像源"; exit 1; }
 }
 
 function gen_root_pass() {
@@ -513,9 +514,11 @@ function start() {
   echo
   echo
 
-  local os_type=$(get_os)
+  declare -A config
 
-  local arch=$(get_arch)
+  is_arch config
+
+  local os_type=$(get_os)
 
   case "$os_type" in
   debian | ubuntu)
@@ -525,8 +528,6 @@ function start() {
     yum install -y wget
     ;;
   esac
-
-  declare -A config
 
   echo
 
