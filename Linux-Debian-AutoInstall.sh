@@ -87,7 +87,7 @@ function gen_network_conf() {
   conf["net_dns"]="$net_dns"
 
   # 获取默认网口名称
-  if [[ ${conf["net_interface"]} == "auto" ]] || [[ -z ${conf["interface"]} ]]; then
+  if [[ ${conf["net_interface"]} == "auto" ]] || [[ -z ${conf["net_interface"]} ]]; then
     # 尝试通过路由获取网口名称
     conf["net_interface"]=$(ip -o -4 route get 1.1.1.1 2>/dev/null | awk '{print $5}')
 
@@ -401,7 +401,7 @@ d-i preseed/late_command string \
 d-i finish-install/reboot_in_progress note
 EOF
 
-  cd /root/initrd || { echo "打开目录 ~/initrd 失败，脚本结束"; exit 1; }
+  cd /root/initrd || { echo "打开目录 /root/initrd 失败，脚本结束"; exit 1; }
   echo
   echo
   echo '解包中...'
@@ -409,7 +409,7 @@ EOF
   rm -fr initrd
   echo
   echo '生成 pressed 配置并写入'
-  echo "$preseed" > ~/initrd/preseed.cfg
+  echo "$preseed" > /root/initrd/preseed.cfg
   echo
   echo '重新归档压缩中...'
   find . | cpio -H newc --create | gzip -9 >"${conf["mirror_dir"]}"/initrd.gz && echo '归档压缩完成'
