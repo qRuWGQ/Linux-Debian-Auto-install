@@ -33,14 +33,8 @@
 
 某些环境不一定能完全自动安装成功，如果长时间未能登录SSH，自行前往VNC控制台进行查看或操作  
 
-## 下载脚本
-
-```shell
-curl -O https://raw.githubusercontent.com/qRuWGQ/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh && chmod +x ./Linux-Debian-AutoInstall.sh
-```  
-
 ## 执行
 
 ```shell
-./Linux-Debian-AutoInstall.sh
+curl -O https://raw.githubusercontent.com/qRuWGQ/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh | bash
 ```
