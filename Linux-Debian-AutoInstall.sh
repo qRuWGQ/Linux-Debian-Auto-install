@@ -444,18 +444,68 @@ function set_mirror() {
 }
 
 function gen_root_pass() {
-  echo '设置ROOT密码'
-  echo '屏幕不会显示输入内容，输入后回车再重复一次'
-  conf["root_pass"]=$(openssl passwd -6)
-  if [ $? -eq 0 ]; then
-    echo '密码设置成功'
-    return 0
+
+  function gen_func1() {
+    echo '设置ROOT密码'
+    echo '屏幕不会显示输入内容，输入后回车再重复一次'
+    while true; do
+      local hash
+      hash=$(openssl passwd -6 2>/dev/null)
+      if [ $? -eq 0 ]; then
+        conf["root_pass"]="$hash"
+        echo '密码设置成功'
+        return 0
+      else
+        echo -e "\n两次输入的密码不一致，重新输入"
+      fi
+    done
+  }
+
+  function gen_func2() {
+    echo '设置ROOT密码'
+    echo '屏幕不会显示输入内容，输入后回车再重复一次'
+    while true; do
+      local password1 password2 hash
+      read -s -p "Password: " password1
+      echo
+      read -s -p "Verifying - Password: " password2
+      echo
+
+      if [[ "$password1" == "$password2" ]]; then
+        hash=$(python3 -c '
+import crypt, sys
+pwd = sys.stdin.readline().rstrip("\n")
+print(crypt.crypt(pwd, crypt.mksalt(crypt.METHOD_SHA512)))
+' <<< "$password1")
+
+        if [[ -n "$hash" ]]; then
+          conf["root_pass"]="$hash"
+          echo "密码设置成功"
+          unset password1 password2
+          return 0
+        else
+          echo -e "\n生成哈希失败，请重试"
+          unset password1 password2
+          continue
+        fi
+      else
+        echo -e "\n两次输入的密码不一致，重新输入"
+      fi
+    done
+  }
+
+  # OpenSSL版本检测
+  local openssl_version
+  openssl_version=$(openssl version 2>/dev/null | awk '{split($2, a, "."); print a[1]}');
+
+  # 版本比较逻辑
+  if [[ "$openssl_version" -ge 3 ]]; then
+    gen_func1
   else
-    echo
-    echo '两次输入的密码不一致，重新输入'
-    gen_root_pass "$1"
+    gen_func2
   fi
 }
+
 
 # 更新grub
 function up_grub() {
