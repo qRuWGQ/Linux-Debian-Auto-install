@@ -476,6 +476,14 @@ function gen_root_pass() {
 import crypt, sys
 pwd = sys.stdin.readline().rstrip("\n")
 print(crypt.crypt(pwd, crypt.mksalt(crypt.METHOD_SHA512)))
+' <<< "$password1" 2>/dev/null || python2 -c '
+# -*- coding: utf-8 -*-
+import crypt, sys, random, string
+pwd = sys.stdin.readline().rstrip("\n")
+salt_chars = string.ascii_letters + string.digits + "./"
+random_salt = "".join(random.choice(salt_chars) for _ in range(8))
+salt = "$6$" + random_salt
+print crypt.crypt(pwd, salt)
 ' <<< "$password1")
 
         if [[ -n "$hash" ]]; then
