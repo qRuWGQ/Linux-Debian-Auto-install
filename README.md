@@ -36,5 +36,5 @@
 ## 执行
 
 ```shell
-curl -O https://raw.githubusercontent.com/qRuWGQ/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh | bash
+curl https://raw.githubusercontent.com/qRuWGQ/Linux-Debian-Auto-install/main/Linux-Debian-AutoInstall.sh | bash
 ```

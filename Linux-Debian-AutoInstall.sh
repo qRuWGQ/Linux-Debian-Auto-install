@@ -1,6 +1,7 @@
 #!/bin/bash
 set -u
 
+declare -A conf
 declare os_type="unknown"
 declare -A mirror_url=(
   [0]=ftp.debian.org
@@ -13,7 +14,6 @@ declare -A mirror_url=(
 
 # 检查系统架构
 function is_arch() {
-  local -n conf=$1
   local arch=$(uname -m)
 
   case "$arch" in
@@ -77,7 +77,6 @@ function get_os() {
 
 # 网络配置
 function gen_network_conf() {
-  local -n conf=$1
   local net_interface
   local net_dns
   # 设置使用哪一个网口
@@ -150,7 +149,6 @@ function gen_network_conf() {
 
 # 生成boot相关配置
 function gen_boot_conf() {
-  local -n conf=$1
   local boot_partition
   local boot_device
   local boot_partition_s
@@ -212,7 +210,6 @@ function gen_boot_conf() {
 
 # 生成preseed配置
 function gen_preseed_conf() {
-  local -n conf=$1
   local partition_table_type
   local boot_method
   local partman
@@ -418,7 +415,6 @@ EOF
 
 # 设置镜像
 function set_mirror() {
-  local -n conf=$1
   local index=0
 
   echo
@@ -448,7 +444,6 @@ function set_mirror() {
 }
 
 function gen_root_pass() {
-  local -n conf=$1
   echo '设置ROOT密码'
   echo '屏幕不会显示输入内容，输入后回车再重复一次'
   conf["root_pass"]=$(openssl passwd -6)
@@ -464,7 +459,6 @@ function gen_root_pass() {
 
 # 更新grub
 function up_grub() {
-  local -n conf=$1
 
   # 自定义启动项
   cat <<EOF >/etc/grub.d/40_custom
@@ -514,9 +508,7 @@ function start() {
   echo
   echo
 
-  declare -A config
-
-  is_arch config
+  is_arch
 
   local os_type=$(get_os)
 
@@ -531,18 +523,18 @@ function start() {
 
   echo
 
-  gen_network_conf config
+  gen_network_conf
 
-  gen_boot_conf config
+  gen_boot_conf
 
   echo
-  gen_root_pass config
+  gen_root_pass
 
-  set_mirror config
+  set_mirror
 
-  gen_preseed_conf config
+  gen_preseed_conf
 
-  up_grub config
+  up_grub
 
   echo
   echo
