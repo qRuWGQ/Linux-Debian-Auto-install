@@ -1,5 +1,5 @@
 #!/bin/bash
-set -u
+set -eu
 
 declare -A conf
 declare os_type="unknown"
