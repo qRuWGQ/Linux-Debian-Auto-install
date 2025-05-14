@@ -81,8 +81,8 @@ function gen_network_conf() {
   local net_interface
   local net_dns
   # 设置使用哪一个网口
-  read -e -p "默认网口, 例如 eth0, 留空或 auto 将自动选择 : " -i "auto" net_interface
-  read -e -p "DNS : " -i "8.8.8.8 1.1.1.1" net_dns
+  read -e -p "默认网口, 例如 eth0, 留空或 auto 将自动选择 : " -i "auto" net_interface </dev/tty
+  read -e -p "DNS : " -i "8.8.8.8 1.1.1.1" net_dns </dev/tty
 
   conf["net_interface"]="$net_interface"
   conf["net_dns"]="$net_dns"
@@ -410,7 +410,7 @@ EOF
   rm -fr initrd
   echo
   echo '生成 pressed 配置并写入'
-  echo "$preseed" > /root/initrd/preseed.cfg
+  echo "$preseed" >/root/initrd/preseed.cfg
   echo
   echo '重新归档压缩中...'
   find . | cpio -H newc --create | gzip -9 >"${conf["mirror_dir"]}"/initrd.gz && echo '归档压缩完成'
@@ -419,7 +419,7 @@ EOF
 # 设置镜像
 function set_mirror() {
   local -n conf=$1
-  local index
+  local index=0
 
   echo
   echo
@@ -433,7 +433,7 @@ function set_mirror() {
   echo "5. 美国 麻省理工"
   echo
 
-  read -e -p "选择镜像源 [0-5] : " -i "0" index
+  read -e -p "选择镜像源 [0-5] : " -i "0" index  </dev/tty
 
   conf["mirror_domain"]=${mirror_url[$index]}
 
@@ -458,7 +458,7 @@ function gen_root_pass() {
   else
     echo
     echo '两次输入的密码不一致，重新输入'
-    gen_root_pass
+    gen_root_pass "$1"
   fi
 }
 
