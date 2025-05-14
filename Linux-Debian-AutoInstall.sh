@@ -466,9 +466,9 @@ function gen_root_pass() {
     echo '屏幕不会显示输入内容，输入后回车再重复一次'
     while true; do
       local password1 password2 hash
-      read -s -p "Password: " password1
+      read -s -p "Password: " password1 </dev/tty
       echo
-      read -s -p "Verifying - Password: " password2
+      read -s -p "Verifying - Password: " password2 </dev/tty
       echo
 
       if [[ "$password1" == "$password2" ]]; then
@@ -538,7 +538,7 @@ EOF
 }
 
 #function set_console_pass() {
-#  read -e -p "临时SSH控制台密码 : " netconsole_pass
+#  read -e -p "临时SSH控制台密码 : " netconsole_pass </dev/tty
 #  if [[ -z "$netconsole_pass" || ${#netconsole_pass} -lt 6 ]]; then
 #    echo "密码为空或小于6位数…"
 #    set_console_pass
