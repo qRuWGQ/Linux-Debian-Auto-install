@@ -95,7 +95,7 @@ function gen_network_conf() {
     if [[ -z ${conf["net_interface"]} ]]; then
       local default_route=$(ip route | grep default)
       if [ -z "$default_route" ]; then
-        echo "无法判断默认网口，请手动填写网口名称"
+        echo "无法判断默认网口，请手动填写网口名称" >&2
         kill -9 $$
       else
         conf["net_interface"]=$(echo "$default_route" | awk '{print $5}')
@@ -103,7 +103,7 @@ function gen_network_conf() {
     fi
   else
     if ! ip link show ${conf["net_interface"]} >/dev/null 2>&1; then
-      echo "错误：指定的网口 ${conf["net_interface"]} 不存在。"
+      echo "错误：指定的网口 ${conf["net_interface"]} 不存在。" >&2
       kill -9 $$
     fi
   fi
@@ -399,7 +399,7 @@ d-i preseed/late_command string \
 d-i finish-install/reboot_in_progress note
 EOF
 
-  cd /root/initrd || { echo "打开目录 /root/initrd 失败，脚本结束"; kill -9 $$; }
+  cd /root/initrd || { echo "打开目录 /root/initrd 失败，脚本结束" >&2; kill -9 $$; }
   echo
   echo
   echo '解包中...'
@@ -439,8 +439,8 @@ function set_mirror() {
 
   local down_url="https://${conf["mirror_domain"]}/debian/dists/bookworm/main/installer-${conf["arch"]}/current/images/netboot/debian-installer/${conf["arch"]}"
 
-  wget -P /root/initrd "${down_url}/initrd.gz" || { echo "下载 initrd.gz 失败，重试或更换镜像源"; kill -9 $$; }
-  wget -P ${conf["mirror_dir"]} "${down_url}/linux" || { echo "下载 linux 失败，重试或更换镜像源"; kill -9 $$; }
+  wget -P /root/initrd "${down_url}/initrd.gz" || { echo "下载 initrd.gz 失败，重试或更换镜像源" >&2; kill -9 $$; }
+  wget -P ${conf["mirror_dir"]} "${down_url}/linux" || { echo "下载 linux 失败，重试或更换镜像源" >&2; kill -9 $$; }
 }
 
 function gen_root_pass() {
