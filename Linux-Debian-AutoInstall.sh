@@ -31,7 +31,7 @@ function is_arch() {
     ;;
   *)
     echo -e "\033[31m不支持当前架构:\033[0m ${arch}" >&2
-    exit 1
+    kill -9 $$
     ;;
   esac
 }
@@ -55,7 +55,7 @@ function get_os() {
     fi
   }
 
-  if [[ -f /etc/redhat-os_type ]]; then
+  if [[ -f /etc/redhat-release ]]; then
     os_type="centos"
   elif [[ -f /etc/debian_version ]]; then
     os_type="debian"
@@ -69,7 +69,7 @@ function get_os() {
 
   if [[ "$os_type" == "unknown" ]]; then
     echo -e "\033[31m不支持当前系统:\033[0m ${os_type}" >&2
-    exit 1
+    kill -9 $$
   else
     echo "$os_type"
   fi
@@ -96,7 +96,7 @@ function gen_network_conf() {
       local default_route=$(ip route | grep default)
       if [ -z "$default_route" ]; then
         echo "无法判断默认网口，请手动填写网口名称"
-        exit 1
+        kill -9 $$
       else
         conf["net_interface"]=$(echo "$default_route" | awk '{print $5}')
       fi
@@ -104,7 +104,7 @@ function gen_network_conf() {
   else
     if ! ip link show ${conf["net_interface"]} >/dev/null 2>&1; then
       echo "错误：指定的网口 ${conf["net_interface"]} 不存在。"
-      exit 1
+      kill -9 $$
     fi
   fi
 
@@ -127,7 +127,7 @@ function gen_network_conf() {
 
   if [[ -z "$prefix" ]]; then
     echo "无法获取子网掩码" >&2
-    exit 1
+    kill -9 $$
   fi
 
   # 转换 CIDR 前缀为点分十进制格式
@@ -399,7 +399,7 @@ d-i preseed/late_command string \
 d-i finish-install/reboot_in_progress note
 EOF
 
-  cd /root/initrd || { echo "打开目录 /root/initrd 失败，脚本结束"; exit 1; }
+  cd /root/initrd || { echo "打开目录 /root/initrd 失败，脚本结束"; kill -9 $$; }
   echo
   echo
   echo '解包中...'
@@ -439,8 +439,8 @@ function set_mirror() {
 
   local down_url="https://${conf["mirror_domain"]}/debian/dists/bookworm/main/installer-${conf["arch"]}/current/images/netboot/debian-installer/${conf["arch"]}"
 
-  wget -P /root/initrd "${down_url}/initrd.gz" || { echo "下载 initrd.gz 失败，重试或更换镜像源"; exit 1; }
-  wget -P ${conf["mirror_dir"]} "${down_url}/linux" || { echo "下载 linux 失败，重试或更换镜像源"; exit 1; }
+  wget -P /root/initrd "${down_url}/initrd.gz" || { echo "下载 initrd.gz 失败，重试或更换镜像源"; kill -9 $$; }
+  wget -P ${conf["mirror_dir"]} "${down_url}/linux" || { echo "下载 linux 失败，重试或更换镜像源"; kill -9 $$; }
 }
 
 function gen_root_pass() {
